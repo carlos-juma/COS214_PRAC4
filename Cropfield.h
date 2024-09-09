@@ -1,34 +1,28 @@
-#include <exception>
-#include <string>
-using namespace std;
-
 #ifndef __Cropfield_h__
 #define __Cropfield_h__
 
-// #include "SoilState.h"
 #include "FarmUnit.h"
+#include "SoilState.h"
 
-class SoilState;
-// class FarmUnit;
-class Cropfield;
+class Cropfield : public FarmUnit {
+protected:
+    std::string cropType;
+    int totalCapacity;
+    int currentStorage;
+    SoilState* soilState;
 
-class Cropfield: public FarmUnit
-{
-	protected: string _cropType;
-	protected: int _totalCapacity;
-	protected: int _currentStorage;
-	protected: SoilState* _soilState;
-	public: SoilState* _unnamed_SoilState_;
+public:
+    Cropfield(std::string cropType, int totalCapacity, SoilState* soilState);
 
-	public: void harvestCrops();
-
-	public: void applyFertilizer();
-
-	public: string getSoilStateName();
-
-	public: string getCropType();
-
-	public: int getTotalCapacity();
+    void harvestCrops() override;
+    void applyFertilizer();
+    std::string getSoilStateName();
+    std::string getCropType();
+    int getTotalCapacity();
+    void storeCrops(int amount);
+    void increaseProduction();
+    int getLeftoverCapacity();
+    SoilState* getSoilState();  // Add this getter
 };
 
 #endif

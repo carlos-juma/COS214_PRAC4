@@ -1,49 +1,45 @@
-#include <exception>
-#include <string>
-#include <vector>
-using namespace std;
-
 #ifndef __FarmUnit_h__
 #define __FarmUnit_h__
 
-// #include "Truck.h"
-// #include "Farmland.h"
-// #include "Client.h"
+#include <string>
+#include <vector>
+#include "SoilState.h"
+#include "Truck.h"
 
 class Truck;
-// class Farmland;
-class Client;
-class FarmUnit;
 
-class FarmUnit
-{
-	public: string _farmName;
-	protected: vector<Truck*> _trucks;
-	public: Farmland* _unnamed_Farmland_;
-	public: Client* _unnamed_Client_;
-	public: Truck* _unnamed_Truck_;
+class FarmUnit {
+protected:
+    std::string name;
+    int totalCapacity;
+    int currentStorage;
+    SoilState* soilState;
+    std::vector<FarmUnit*> children;  // Vector to store child farm units
+    std::vector<Truck*> trucks;       // Vector to store observer trucks
 
-	public: int getTotalCapacity();
+public:
+    FarmUnit(std::string name, int totalCapacity, std::string cropType, SoilState* soilState);
 
-	public: string getCropType();
+    std::string getName() const;
+    int getTotalCapacity() const;
+    int getCurrentStorage() const;
+    std::string getSoilStateName() const;
 
-	public: string getSoilStateName();
+    virtual void harvestCrops();
 
-	public: FarmUnit* getChild(string aInt_26);
+    // Observer methods
+    void attachTruck(Truck* truck);    // Attach a truck (observer)
+    void detachTruck(Truck* truck);    // Detach a truck (observer)
+    void notifyTrucks();               // Notify all attached trucks (observers)
 
-	public: void add(string aFarmUnit);
+    // Methods for managing child farm units
+    int getChildrenCount() const;  // Returns the number of children
+    FarmUnit* getChild(int index); // Returns the child at the specified index
+    void addChild(FarmUnit* child); // Add a child farm unit to the list
 
-	public: void remove(string aFarmunit);
-
-	public: void attachTruck(Truck* aTruck);
-
-	public: void detachTruck(Truck* aTruck);
-
-	public: void notifyTrucks();
-
-	public: void triggerFertilization();
-
-	public: void triggerCropCollection();
+    // Triggers
+    void triggerCropCollection();  // Trigger crop collection (used by trucks)
+    void triggerFertilization();   // Trigger fertilization (used by trucks)
 };
 
 #endif

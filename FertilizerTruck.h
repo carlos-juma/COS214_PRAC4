@@ -1,20 +1,13 @@
-#include <exception>
-using namespace std;
-
 #ifndef __FertilizerTruck_h__
 #define __FertilizerTruck_h__
 
-// #include "FarmUnit.h"
 #include "Truck.h"
+#include "FarmUnit.h"
 
-class FarmUnit;
-// class Truck;
-class FertilizerTruck;
-
-class FertilizerTruck: public Truck
-{
-
-	public: void update(FarmUnit* aUnit);
+class FertilizerTruck : public Truck {
+public:
+    FertilizerTruck(std::string name) : Truck(name) {}
+    void update(FarmUnit* aUnit) override;
 };
 
 #endif

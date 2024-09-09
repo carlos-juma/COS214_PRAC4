@@ -1,30 +1,22 @@
-#include <exception>
-#include <string>
-using namespace std;
-
 #ifndef __Barn_h__
 #define __Barn_h__
 
 #include "FarmUnit.h"
 
-// class FarmUnit;
-class Barn;
+class Barn : public FarmUnit {
+public:
+    Barn(std::string barnName, int capacity, SoilState* soilState);  // Constructor
 
-class Barn: public FarmUnit
-{
-	protected: string _barnName;
-	protected: int _capacity;
-	protected: int _currentStorage;
+    void storeCrops(int aAmount);
+    void retrieveCrops(int aAmount);
+    int getAvailableCapacity();
+    std::string getBarnName();
+    int getCurrentStorage();
 
-	public: void storeCrops(int aAmount);
-
-	public: void retrieveCrops(int aAmount);
-
-	public: int getAvailableCapacity();
-
-	public: string getBarnName();
-
-	public: int getCurrentStorage();
+protected:
+    std::string _barnName;
+    int _capacity;
+    int _currentStorage;
 };
 
 #endif

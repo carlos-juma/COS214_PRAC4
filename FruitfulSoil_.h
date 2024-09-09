@@ -1,23 +1,15 @@
-#include <exception>
-#include <string>
-using namespace std;
-
 #ifndef __FruitfulSoil__h__
 #define __FruitfulSoil__h__
 
 #include "SoilState.h"
+#include <string>
 
-// class SoilState;
-class FruitfulSoil_;
-
-class FruitfulSoil_: public SoilState
-{
-
-	public: void harvestCrops(string aCropField);
-
-	public: void rain(string aCropField);
-
-	public: string getName();
+class FruitfulSoil_ : public SoilState {
+public:
+    FruitfulSoil_();
+    void harvestCrops(Cropfield* aCropField) override;
+    void rain(Cropfield* aCropField) override;
+    std::string getName() const override;
 };
 
 #endif

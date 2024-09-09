@@ -1,23 +1,21 @@
-#include <exception>
-#include <string>
-using namespace std;
-
 #ifndef __Truck_h__
 #define __Truck_h__
+#include <iostream>  
 
-// #include "FarmUnit.h"
+#include <string>
+#include "FarmUnit.h"
 
 class FarmUnit;
-class Truck;
 
-class Truck
-{
-	private: string _name;
-	public: FarmUnit* _unnamed_FarmUnit_;
+class Truck {
+private:
+    std::string name;
 
-	public: void update(FarmUnit* aUnit);
-
-	public: void startEngine();
+public:
+    Truck(std::string name) : name(name) {}
+    virtual void update(FarmUnit* aUnit) = 0;  // Pure virtual function for observer
+    void startEngine();
+    std::string getName() const { return name; }
 };
 
 #endif

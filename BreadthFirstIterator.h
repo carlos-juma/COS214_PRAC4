@@ -1,28 +1,23 @@
-#include <exception>
-#include <queue>
-using namespace std;
-
 #ifndef __BreadthFirstIterator_h__
 #define __BreadthFirstIterator_h__
 
-// #include "FarmUnit.h"
 #include "FarmIterator.h"
+#include <queue>
 
 class FarmUnit;
-// class FarmIterator;
-class BreadthFirstIterator;
 
-class BreadthFirstIterator: public FarmIterator
-{
-	private: queue<FarmUnit*> _queue;
+class BreadthFirstIterator : public FarmIterator {
+private:
+    std::queue<FarmUnit*> _queue;
+    FarmUnit* _currentFarm;
 
-	public: FarmUnit* firstFarm();
+public:
+    BreadthFirstIterator(FarmUnit* rootFarm);
 
-	public: FarmUnit* nextFarm();
-
-	public: bool isDone();
-
-	public: FarmUnit* currentFarm();
+    FarmUnit* firstFarm() override;
+    FarmUnit* nextFarm() override;
+    bool isDone() override;
+    FarmUnit* currentFarm() override;
 };
 
 #endif

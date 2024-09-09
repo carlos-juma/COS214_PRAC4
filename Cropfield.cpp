@@ -1,66 +1,88 @@
 #include "Cropfield.h"
-#include "SoilState.h"
+#include "FruitfulSoil_.h"
 #include <iostream>
 
 using namespace std;
 
 // Constructor to initialize the crop field
 Cropfield::Cropfield(string cropType, int totalCapacity, SoilState* soilState)
-    : _cropType(cropType), _totalCapacity(totalCapacity), _soilState(soilState), _currentStorage(0) {}
+    : FarmUnit(cropType, totalCapacity, cropType, soilState), cropType(cropType), totalCapacity(totalCapacity), soilState(soilState), currentStorage(0) {}
+
 
 // Harvest crops based on the current soil state
 void Cropfield::harvestCrops() {
-    cout << "Harvesting crops from the field with soil state: " << _soilState->getName() << endl;
-    // Soil state influences the crop yield
-    _soilState->harvestCrops(this);
-    _currentStorage = 0; // After harvest, reset storage
+    if (totalCapacity > 0) {
+        cout << "Harvesting crops from the field with soil state: " << soilState->getName() << endl;
+        double yieldMultiplier = 1;
+
+        if (soilState->getName() == "Fruitful") {
+            yieldMultiplier = 3.0;  // Fruitful soil yields 3x
+        } else if (soilState->getName() == "Dry") {
+            yieldMultiplier = 1.0;  // Dry soil yields normal
+        } else if (soilState->getName() == "Flooded") {
+            yieldMultiplier = 0.0;  // No crops can be harvested in flooded soil
+        }
+
+        double harvestedTonnes = totalCapacity * yieldMultiplier;  // Harvested amount in tonnes
+        cout << "Harvesting crops in " << soilState->getName() << " soil. Yield is " << yieldMultiplier << "x." << endl;
+        cout << "Total harvested: " << harvestedTonnes << " tonnes of crops." << endl;
+
+        // Ensure current storage doesn't exceed total capacity
+        if (harvestedTonnes > totalCapacity) {
+            currentStorage = totalCapacity;
+        } else {
+            currentStorage = harvestedTonnes;
+        }
+        
+        cout << "Updated storage after harvest: " << currentStorage << " tonnes of crops." << endl;
+
+    } else {
+        cout << "No crops to harvest in the field." << endl;
+    }
 }
+
 
 // Apply fertilizer to the crop field and transition from DrySoil to FruitfulSoil
 void Cropfield::applyFertilizer() {
     cout << "Applying fertilizer to the crop field." << endl;
-    if (_soilState->getName() == "Dry") {
-        // Transition from DrySoil to FruitfulSoil
-        _soilState = new FruitfulSoil();
+    if (soilState->getName() == "Dry") {
+        soilState = new FruitfulSoil_();
         cout << "Soil state transitioned from Dry to Fruitful." << endl;
     }
 }
 
-// Get the name of the current soil state
-string Cropfield::getSoilStateName() {
-    return _soilState->getName();
+std::string Cropfield::getSoilStateName() {
+    return soilState->getName();
 }
 
-// Get the crop type being grown in the crop field
-string Cropfield::getCropType() {
-    return _cropType;
+std::string Cropfield::getCropType() {
+    return cropType;
 }
 
-// Get the total storage capacity of the crop field
 int Cropfield::getTotalCapacity() {
-    return _totalCapacity;
+    return totalCapacity;
+}
+SoilState* Cropfield::getSoilState() {
+    return soilState;
 }
 
-// Increase production after applying fertilizer or adding additional capacity like ExtraBarn
 void Cropfield::increaseProduction() {
-    if (_soilState->getName() == "Dry") {
-        applyFertilizer(); // Increase production by applying fertilizer
-    } else if (_soilState->getName() == "Fruitful") {
-        _totalCapacity += 10; // Example: increase capacity after applying fertilizer
+    if (soilState->getName() == "Dry") {
+        applyFertilizer(); 
+    } else if (soilState->getName() == "Fruitful") {
+        totalCapacity += 10;
     }
 }
 
-// Return the remaining storage capacity after adding crops or harvesting
 int Cropfield::getLeftoverCapacity() {
-    return _totalCapacity - _currentStorage;
+    return totalCapacity - currentStorage;
 }
 
-// Function to simulate adding crops to the field storage
 void Cropfield::storeCrops(int amount) {
-    if (_currentStorage + amount <= _totalCapacity) {
-        _currentStorage += amount;
+    if (currentStorage + amount <= totalCapacity) {
+        currentStorage += amount;
     } else {
         cout << "Not enough capacity, storing up to max capacity." << endl;
-        _currentStorage = _totalCapacity; // Limit to max capacity
+        currentStorage = totalCapacity;
     }
 }

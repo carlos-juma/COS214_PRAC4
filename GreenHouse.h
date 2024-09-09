@@ -1,33 +1,30 @@
-#include <exception>
-#include <string>
-using namespace std;
-
 #ifndef __GreenHouse_h__
 #define __GreenHouse_h__
 
+#include <string>
 #include "FarmUnit.h"
 
-// class FarmUnit;
-class GreenHouse;
-
-class GreenHouse: public FarmUnit
+class GreenHouse : public FarmUnit
 {
-	protected: string _cropType;
-	protected: int _totalCapacity;
-	protected: int _currentStored;
-	protected: bool _controlledEnvironment;
+protected:
+    std::string _cropType;
+    int _totalCapacity;
+    int _currentStored;
+    bool _controlledEnvironment;
 
-	public: int getTotalCapacity();
+public:
+    // Constructor for GreenHouse
+    GreenHouse(std::string name, int totalCapacity, std::string cropType, SoilState* soilState, bool controlledEnvironment);
 
-	public: string getCropType();
+    int getTotalCapacity();
+    std::string getCropType();
+    std::string getEnvironmentState();
+    int getCurrentStored();
+    void setCurrentStored(int aAmount);
+    void operation();
 
-	public: string getEnvironmentState();
-
-	public: int getCurrentStored();
-
-	public: void setCurrentStored(int aAmount);
-
-	public: void operation();
+    // Setter for _controlledEnvironment
+    void setControlledEnvironment(bool controlled);
 };
 
 #endif

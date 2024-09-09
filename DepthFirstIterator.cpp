@@ -1,24 +1,39 @@
-#include <exception>
-#include <stack>
-using namespace std;
-
 #include "DepthFirstIterator.h"
 #include "FarmUnit.h"
-#include "FarmIterator.h"
+
+DepthFirstIterator::DepthFirstIterator(FarmUnit* rootFarm) {
+    _currentFarm = rootFarm;
+    _stack.push(rootFarm);
+}
 
 FarmUnit* DepthFirstIterator::firstFarm() {
-	throw "Not yet implemented";
+    if (!_stack.empty()) {
+        _currentFarm = _stack.top();
+    }
+    return _currentFarm;
 }
 
 FarmUnit* DepthFirstIterator::nextFarm() {
-	throw "Not yet implemented";
+    if (_stack.empty()) {
+        return nullptr;
+    }
+
+    FarmUnit* farm = _stack.top();
+    _stack.pop();
+
+    // Add children in reverse order for proper depth-first traversal
+    for (int i = farm->getChildrenCount() - 1; i >= 0; --i) {
+        _stack.push(farm->getChild(i));
+    }
+
+    _currentFarm = farm;
+    return _currentFarm;
 }
 
 bool DepthFirstIterator::isDone() {
-	throw "Not yet implemented";
+    return _stack.empty();
 }
 
 FarmUnit* DepthFirstIterator::currentFarm() {
-	throw "Not yet implemented";
+    return _currentFarm;
 }
-

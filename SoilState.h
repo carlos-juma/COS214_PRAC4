@@ -1,25 +1,17 @@
-#include <exception>
-#include <string>
-using namespace std;
-
 #ifndef __SoilState_h__
 #define __SoilState_h__
 
-// #include "Cropfield.h"
-
+#include <string>
 class Cropfield;
-class SoilState;
 
-class SoilState
-{
-	protected: string _name;
-	public: Cropfield* _unnamed_Cropfield_;
-
-	public: void harvestCrops(string aCropField);
-
-	public: void rain(string aCropField);
-
-	public: string getName();
+class SoilState {
+protected:
+    std::string name;
+public:
+    SoilState(std::string name);
+    virtual void harvestCrops(Cropfield* cropField) = 0;  // Pure virtual method
+    virtual void rain(Cropfield* cropField) = 0;          // Pure virtual method
+    virtual std::string getName() const;  // To get the name of the soil state
 };
 
 #endif

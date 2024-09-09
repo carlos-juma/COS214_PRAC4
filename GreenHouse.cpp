@@ -3,18 +3,23 @@
 
 using namespace std;
 
+// Constructor for GreenHouse
+GreenHouse::GreenHouse(std::string name, int totalCapacity, std::string cropType, SoilState* soilState, bool controlledEnvironment)
+    : FarmUnit(name, totalCapacity, cropType, soilState), _cropType(cropType), _totalCapacity(totalCapacity), _currentStored(0), _controlledEnvironment(controlledEnvironment) {
+}
+
 // Returns the total storage capacity of the greenhouse
 int GreenHouse::getTotalCapacity() {
     return this->_totalCapacity;
 }
 
 // Returns the type of crop being grown in the greenhouse
-string GreenHouse::getCropType() {
+std::string GreenHouse::getCropType() {
     return this->_cropType;
 }
 
-// Returns the state of the controlled environment (e.g., whether the environment is controlled or not)
-string GreenHouse::getEnvironmentState() {
+// Returns the state of the controlled environment
+std::string GreenHouse::getEnvironmentState() {
     if (_controlledEnvironment) {
         return "Controlled";
     } else {
@@ -36,6 +41,11 @@ void GreenHouse::setCurrentStored(int aAmount) {
         cout << "Cannot store " << aAmount << ". Exceeds greenhouse capacity." << endl;
         this->_currentStored = _totalCapacity;
     }
+}
+
+// Setter for _controlledEnvironment
+void GreenHouse::setControlledEnvironment(bool controlled) {
+    _controlledEnvironment = controlled;
 }
 
 // Greenhouse operation to maintain a controlled environment and manage crop growth

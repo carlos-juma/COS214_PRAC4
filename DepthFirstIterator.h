@@ -1,28 +1,23 @@
-#include <exception>
-#include <stack>
-using namespace std;
-
 #ifndef __DepthFirstIterator_h__
 #define __DepthFirstIterator_h__
 
-// #include "FarmUnit.h"
 #include "FarmIterator.h"
+#include <stack>
 
 class FarmUnit;
-// class FarmIterator;
-class DepthFirstIterator;
 
-class DepthFirstIterator: public FarmIterator
-{
-	private: stack<FarmUnit*> _stack;
+class DepthFirstIterator : public FarmIterator {
+private:
+    std::stack<FarmUnit*> _stack;
+    FarmUnit* _currentFarm;  // Track current farm
 
-	public: FarmUnit* firstFarm();
+public:
+    DepthFirstIterator(FarmUnit* rootFarm);
 
-	public: FarmUnit* nextFarm();
-
-	public: bool isDone();
-
-	public: FarmUnit* currentFarm();
+    FarmUnit* firstFarm() override;
+    FarmUnit* nextFarm() override;
+    bool isDone() override;
+    FarmUnit* currentFarm() override;
 };
 
 #endif

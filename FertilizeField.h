@@ -1,23 +1,14 @@
-#include <exception>
-#include <string>
-using namespace std;
-
-#ifndef __FertilizeField_h__
-#define __FertilizeField_h__
+#ifndef __FERTILIZEFIELD_H__
+#define __FERTILIZEFIELD_H__
 
 #include "Cropfield.h"
 
-// class Cropfield;
-class FertilizeField;
-
-class FertilizeField: public Cropfield
-{
-
-	public: void increaseProduction();
-
-	public: void harvestCrops();
-
-	public: string getSoilStateName();
+class FertilizeField : public Cropfield {
+public:
+    FertilizeField(Cropfield* baseField);  // Constructor to apply fertilizer to an existing field
+    void increaseProduction();             // Increases production by applying fertilizer
+    void harvestCrops() override;          // Overrides the harvest function
+    std::string getSoilStateName();        // Get the current soil state name
 };
 
 #endif

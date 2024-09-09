@@ -1,116 +1,81 @@
 #include "FarmUnit.h"
 #include "Truck.h"
-#include "Farmland.h"
-#include "Client.h"
-#include "SoilState.h"
 #include <iostream>
-#include <algorithm>
+#include "FruitfulSoil_.h"  // Include the correct header for FruitfulSoil_
 
-// Constructor for FarmUnit
-FarmUnit::FarmUnit(string name, int totalCapacity, string cropType, SoilState* soilState) 
-    : _farmName(name), totalCapacity(totalCapacity), cropType(cropType), soilState(soilState) {}
+using namespace std;
 
-// Returns the total capacity of the farm unit
-int FarmUnit::getTotalCapacity() {
+FarmUnit::FarmUnit(string name, int totalCapacity, string cropType, SoilState* soilState)
+    : name(name), totalCapacity(totalCapacity), currentStorage(0), soilState(soilState) {}
+
+string FarmUnit::getName() const {
+    return name;
+}
+
+int FarmUnit::getTotalCapacity() const {
     return totalCapacity;
 }
 
-// Returns the type of crop
-string FarmUnit::getCropType() {
-    return cropType;
+int FarmUnit::getCurrentStorage() const {
+    return currentStorage;
 }
 
-// Returns the name of the current soil state
-string FarmUnit::getSoilStateName() {
+string FarmUnit::getSoilStateName() const {
     return soilState->getName();
 }
 
-// Add a child FarmUnit
-void FarmUnit::add(FarmUnit* aFarmUnit) {
-    _childUnits.push_back(aFarmUnit);
+void FarmUnit::harvestCrops() {
+    cout << "Harvesting crops at " << name << endl;
+    notifyTrucks();  // Notify trucks after harvesting
 }
 
-// Remove a child FarmUnit
-void FarmUnit::remove(FarmUnit* aFarmUnit) {
-    _childUnits.erase(std::remove(_childUnits.begin(), _childUnits.end(), aFarmUnit), _childUnits.end());
+void FarmUnit::triggerCropCollection() {
+    cout << "Triggering crop collection at " << name << endl;
+    currentStorage = 0;  // Reset the current storage
+    notifyTrucks();  // Notify trucks about the collection
 }
 
-// Return a child farm unit by index
-FarmUnit* FarmUnit::getChild(int index) {
-    if (index < _childUnits.size()) {
-        return _childUnits[index];
+void FarmUnit::triggerFertilization() {
+    cout << "Fertilization triggered at " << name << endl;
+
+    // Ensure the soil state changes to "Fruitful" after fertilization
+    if (soilState->getName() == "Dry") {
+        soilState = new FruitfulSoil_();  // Transition to fruitful soil after fertilization
+        cout << "Soil state has changed to Fruitful." << endl;
     }
-    return nullptr;
 }
 
-// Attach a truck to the farm
-void FarmUnit::attachTruck(Truck* aTruck) {
-    _trucks.push_back(aTruck);
+// Observer pattern methods
+void FarmUnit::attachTruck(Truck* truck) {
+    trucks.push_back(truck);
 }
 
-// Detach a truck from the farm
-void FarmUnit::detachTruck(Truck* aTruck) {
-    _trucks.erase(std::remove(_trucks.begin(), _trucks.end(), aTruck), _trucks.end());
+#include "FarmUnit.h"
+#include <algorithm>  // Include algorithm for std::remove
+
+void FarmUnit::detachTruck(Truck* truck) {
+    auto it = std::remove(trucks.begin(), trucks.end(), truck);  // Correct use of std::remove
+    trucks.erase(it, trucks.end());  // Erase the truck from the vector
 }
 
-// Notify trucks for any logistics needs
 void FarmUnit::notifyTrucks() {
-    for (Truck* truck : _trucks) {
+    for (Truck* truck : trucks) {
         truck->update(this);
     }
 }
 
-// Trigger fertilization process
-void FarmUnit::triggerFertilization() {
-    if (soilState->getName() == "Dry") {
-        // Applying fertilizer transitions to fruitful soil
-        soilState = new FruitfulSoil();
-        cout << "Fertilization applied, soil transitioned to Fruitful." << endl;
+// Methods for child farm units
+int FarmUnit::getChildrenCount() const {
+    return children.size();
+}
+
+FarmUnit* FarmUnit::getChild(int index) {
+    if (index >= 0 && index < children.size()) {
+        return children[index];
     }
-    notifyTrucks();
+    return nullptr;
 }
 
-// Trigger crop collection process
-void FarmUnit::triggerCropCollection() {
-    if (currentStorage >= totalCapacity * 0.9) {
-        cout << "Storage near capacity, dispatching delivery truck." << endl;
-        notifyTrucks();
-    }
-}
-
-// Simulate the application of fertilizer and transition from DrySoil to FruitfulSoil
-void FarmUnit::increaseProduction() {
-    if (soilState->getName() == "Dry") {
-        triggerFertilization();
-    }
-}
-
-// Harvest crops from the field based on soil state
-void FarmUnit::harvestCrops() {
-    soilState->harvestCrops(this);
-    currentStorage = 0; // Clear out storage after harvest
-}
-
-// Get the remaining capacity after adding crops
-int FarmUnit::getLeftoverCapacity() {
-    return totalCapacity - currentStorage;
-}
-
-// Call a truck for a specific operation (fertilization or crop collection)
-void FarmUnit::callTruck(string operation) {
-    if (operation == "fertilize") {
-        triggerFertilization();
-    } else if (operation == "collect") {
-        triggerCropCollection();
-    }
-}
-
-// Simulate buying a truck
-void FarmUnit::buyTruck(Truck* truck) {
-    attachTruck(truck);
-}
-
-// Simulate selling a truck
-void FarmUnit::sellTruck(Truck* truck) {
-    detachTruck(truck);
+void FarmUnit::addChild(FarmUnit* child) {
+    children.push_back(child);
 }

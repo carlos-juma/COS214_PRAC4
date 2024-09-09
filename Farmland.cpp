@@ -1,36 +1,35 @@
 #include "Farmland.h"
 #include "FarmUnit.h"
 #include <iostream>
+#include <algorithm>
 
 using namespace std;
 
-// Add a FarmUnit to the farmland
+// Add a new FarmUnit to the Farmland
 void Farmland::addUnit(FarmUnit* unit) {
     _units.push_back(unit);
     cout << "Added a new FarmUnit to the farmland." << endl;
 }
 
-// Remove a FarmUnit from the farmland
+// Remove a FarmUnit from the Farmland
 void Farmland::removeUnit(FarmUnit* unit) {
-    for (auto it = _units.begin(); it != _units.end(); ++it) {
-        if (*it == unit) {
-            _units.erase(it);
-            cout << "Removed a FarmUnit from the farmland." << endl;
-            break;
-        }
+    auto it = find(_units.begin(), _units.end(), unit);
+    if (it != _units.end()) {
+        _units.erase(it);
+        cout << "Removed a FarmUnit from the farmland." << endl;
     }
 }
 
-// Get the total capacity of all units in the farmland
+// Calculate the total capacity of the farmland by summing up the capacities of all units
 int Farmland::getTotalCapacity() {
     int totalCapacity = 0;
     for (FarmUnit* unit : _units) {
-        totalCapacity += unit->getTotalCapacity();  // Assuming FarmUnit has getTotalCapacity method
+        totalCapacity += unit->getTotalCapacity();
     }
     return totalCapacity;
 }
 
-// Return a specific unit from the farmland by index
+// Get a specific FarmUnit by its index
 FarmUnit* Farmland::getUnit(int index) {
     if (index >= 0 && index < _units.size()) {
         return _units[index];
@@ -38,13 +37,13 @@ FarmUnit* Farmland::getUnit(int index) {
     return nullptr;
 }
 
-// Notify all units in the farmland to start a specified operation (e.g., harvesting or fertilizing)
+// Notify all units about an operation (e.g., harvest or fertilize)
 void Farmland::notifyAllUnits(string operation) {
     for (FarmUnit* unit : _units) {
         if (operation == "harvest") {
-            unit->triggerCropCollection();  // Assuming triggerCropCollection exists in FarmUnit
+            unit->triggerCropCollection();  // Trigger crop collection for each unit
         } else if (operation == "fertilize") {
-            unit->triggerFertilization();  // Assuming triggerFertilization exists in FarmUnit
+            unit->triggerFertilization();   // Trigger fertilization for each unit
         }
     }
 }

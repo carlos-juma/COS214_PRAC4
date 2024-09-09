@@ -3,6 +3,11 @@
 
 using namespace std;
 
+// Constructor for Barn
+Barn::Barn(string barnName, int capacity, SoilState* soilState)
+    : FarmUnit(barnName, capacity, "Crops", soilState), _barnName(barnName), _capacity(capacity), _currentStorage(0) {
+}
+
 // Store crops in the barn up to the maximum capacity
 void Barn::storeCrops(int aAmount) {
     if (_currentStorage + aAmount <= _capacity) {
@@ -32,10 +37,10 @@ int Barn::getAvailableCapacity() {
 
 // Return the name of the barn
 string Barn::getBarnName() {
-    return this->_barnName;
+    return _barnName;
 }
 
 // Return the current storage amount in the barn
 int Barn::getCurrentStorage() {
-    return this->_currentStorage;
+    return _currentStorage;
 }

@@ -1,24 +1,16 @@
-#include <exception>
-using namespace std;
-
 #ifndef __ExtraBarn_h__
 #define __ExtraBarn_h__
 
 #include "Barn.h"
 
-// class Barn;
-class ExtraBarn;
+class ExtraBarn : public Barn {
+public:
+    ExtraBarn(std::string barnName, int capacity, SoilState* soilState);  // Constructor
 
-class ExtraBarn: public Barn
-{
-
-	public: void increaseProduction();
-
-	public: void harvestCrops();
-
-	public: int getLeftoverCapacity();
-
-	public: int getTotalCapacity();
+    void increaseProduction();
+    void harvestCrops();
+    int getLeftoverCapacity();
+    int getTotalCapacity();
 };
 
 #endif
